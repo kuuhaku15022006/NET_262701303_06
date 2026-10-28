@@ -293,7 +293,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "D:/code/008/build/ChatServer_autogen/include"
+					"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/include"
 				},
 				{
 					"backtrace" : 13,
@@ -341,11 +341,11 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 0,
-			"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df"
+			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"backtrace" : 0,
+			"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "ChatServer::@6890427a1f51a3e7e1df",
@@ -420,11 +420,11 @@
 			"id" : "Qt6::uic::@6890427a1f51a3e7e1df"
 		},
 		{
-			"backtrace" : 0,
-			"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df"
+			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"backtrace" : 0,
+			"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df"
 		}
 	],
 	"paths" : 
@@ -474,7 +474,7 @@
 			],
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/ChatServer_autogen/mocs_compilation.cpp",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -493,7 +493,7 @@
 			[
 				30
 			],
-			"path" : "D:/code/008/build/ChatServer.exe.manifest",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer.exe.manifest",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -503,7 +503,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/ChatServer_autogen/timestamp",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/timestamp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -513,7 +513,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/ChatServer_autogen/timestamp.rule",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],

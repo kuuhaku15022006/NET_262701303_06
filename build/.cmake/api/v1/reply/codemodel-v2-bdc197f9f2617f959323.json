@@ -733,42 +733,42 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatClient::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatClient-Debug-b8afe77bab140417a4be.json",
+					"jsonFile" : "target-ChatClient-Debug-60994f35e1269bab0b9c.json",
 					"name" : "ChatClient",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatClient_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatClient_autogen-Debug-2a14e12e2384552471a4.json",
+					"jsonFile" : "target-ChatClient_autogen-Debug-40e9a8858decc70a15fb.json",
 					"name" : "ChatClient_autogen",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatClient_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatClient_autogen_timestamp_deps-Debug-2edd3414ebbf07b669df.json",
+					"jsonFile" : "target-ChatClient_autogen_timestamp_deps-Debug-8071e1cccdb62347cfc3.json",
 					"name" : "ChatClient_autogen_timestamp_deps",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatServer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatServer-Debug-2e449ccec980f655f960.json",
+					"jsonFile" : "target-ChatServer-Debug-2f296bdc8b5766af7a45.json",
 					"name" : "ChatServer",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatServer_autogen-Debug-415d655e63369a8cbb46.json",
+					"jsonFile" : "target-ChatServer_autogen-Debug-8e4d656edde4b438cd8c.json",
 					"name" : "ChatServer_autogen",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatServer_autogen_timestamp_deps-Debug-f62d64584b921c73fab5.json",
+					"jsonFile" : "target-ChatServer_autogen_timestamp_deps-Debug-74cf14b0e10e3b5942c2.json",
 					"name" : "ChatServer_autogen_timestamp_deps",
 					"projectIndex" : 0
 				}
@@ -778,7 +778,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/code/008/build",
+		"build" : "D:/code/NET_08/NET_262701303_06/build",
 		"source" : "D:/code/008/ChatApplication"
 	},
 	"version" : 
