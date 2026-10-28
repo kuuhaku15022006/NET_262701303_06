@@ -1,8 +1,44 @@
+
+#include "protocol.h"
+
+#include <QJsonDocument>
+#include <QJsonParseError>
+
+namespace Protocol
 {
-  "type": "message",
-  "message_id": "msg_101",
-  "conversation_id": "conv_01",
-  "content": "Hello 😊",
-  "reply_to": null,
-  "forwarded_from": null
+    QByteArray encode(const QJsonObject &data)
+    {
+        return QJsonDocument(data).toJson(
+            QJsonDocument::Compact
+        );
+    }
+
+    bool decode(
+        const QByteArray &raw,
+        QJsonObject &result,
+        QString *error
+    )
+    {
+        QJsonParseError parseError;
+
+        QJsonDocument document =
+            QJsonDocument::fromJson(raw, &parseError);
+
+        if (parseError.error != QJsonParseError::NoError) {
+            if (error) {
+                *error = parseError.errorString();
+            }
+            return false;
+        }
+
+        if (!document.isObject()) {
+            if (error) {
+                *error = "JSON phải là một object";
+            }
+            return false;
+        }
+
+        result = document.object();
+        return true;
+    }
 }
