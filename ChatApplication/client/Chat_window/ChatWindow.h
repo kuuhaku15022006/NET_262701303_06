@@ -1,0 +1,9 @@
+#include <QApplication>
+#include <QWidget>
+#include <QLabel>
+#include <QPushButton>
+#include <QLineEdit>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QListWidget>
+#include <QTextEdit>

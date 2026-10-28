@@ -362,7 +362,7 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "D:/code/008/build/ChatClient_autogen/include"
+					"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/include"
 				},
 				{
 					"backtrace" : 28,
@@ -587,7 +587,7 @@
 			],
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/ChatClient_autogen/mocs_compilation.cpp",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -606,7 +606,7 @@
 			[
 				40
 			],
-			"path" : "D:/code/008/build/ChatClient.exe.manifest",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient.exe.manifest",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -616,7 +616,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/ChatClient_autogen/timestamp",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/timestamp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -626,7 +626,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/ChatClient_autogen/timestamp.rule",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],

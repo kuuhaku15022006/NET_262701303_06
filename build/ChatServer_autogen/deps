@@ -287,8 +287,8 @@ ChatServer_autogen/timestamp: \
 	C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6WidgetsTools/Qt6WidgetsToolsVersionlessTargets.cmake \
 	D:/code/008/ChatApplication/CMakeLists.txt \
 	D:/code/008/ChatApplication/server/main.cpp \
-	D:/code/008/build/CMakeFiles/4.5.0-rc1/CMakeCXXCompiler.cmake \
-	D:/code/008/build/CMakeFiles/4.5.0-rc1/CMakeRCCompiler.cmake \
-	D:/code/008/build/CMakeFiles/4.5.0-rc1/CMakeSystem.cmake \
+	D:/code/NET_08/NET_262701303_06/build/CMakeFiles/4.5.0-rc1/CMakeCXXCompiler.cmake \
+	D:/code/NET_08/NET_262701303_06/build/CMakeFiles/4.5.0-rc1/CMakeRCCompiler.cmake \
+	D:/code/NET_08/NET_262701303_06/build/CMakeFiles/4.5.0-rc1/CMakeSystem.cmake \
 	c:/Qt/6.12.0/mingw_64/lib/cmake/Qt6/qt.toolchain.cmake \
 	C:/Program\ Files/CMake/bin/cmake.exe
