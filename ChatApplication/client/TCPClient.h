@@ -19,7 +19,7 @@ public:
     // Hàm quản lý kết nối
     void connectToServer(const QString &host, quint16 port);
     void disconnectFromServer();
-    bool isConnected() const;
+    bool isConnected() const; // kiểm tra client có kết nối hay ko
 
     // Hàm gửi request và vòng lặp nhận dữ liệu
     void receiveLoop();
