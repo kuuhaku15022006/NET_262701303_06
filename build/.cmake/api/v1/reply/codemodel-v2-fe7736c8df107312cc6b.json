@@ -733,42 +733,42 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatClient::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatClient-Debug-60994f35e1269bab0b9c.json",
+					"jsonFile" : "target-ChatClient-Debug-395c4ee6abc72183ad20.json",
 					"name" : "ChatClient",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatClient_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatClient_autogen-Debug-40e9a8858decc70a15fb.json",
+					"jsonFile" : "target-ChatClient_autogen-Debug-d619e4393849ff429b30.json",
 					"name" : "ChatClient_autogen",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatClient_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatClient_autogen_timestamp_deps-Debug-8071e1cccdb62347cfc3.json",
+					"jsonFile" : "target-ChatClient_autogen_timestamp_deps-Debug-b1f1362470426636cfab.json",
 					"name" : "ChatClient_autogen_timestamp_deps",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatServer::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatServer-Debug-2f296bdc8b5766af7a45.json",
+					"jsonFile" : "target-ChatServer-Debug-26c168b5b3ebd10dd105.json",
 					"name" : "ChatServer",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatServer_autogen-Debug-8e4d656edde4b438cd8c.json",
+					"jsonFile" : "target-ChatServer_autogen-Debug-15de8ff247555fc53a77.json",
 					"name" : "ChatServer_autogen",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-ChatServer_autogen_timestamp_deps-Debug-74cf14b0e10e3b5942c2.json",
+					"jsonFile" : "target-ChatServer_autogen_timestamp_deps-Debug-7bac26e26b027c8f4e52.json",
 					"name" : "ChatServer_autogen_timestamp_deps",
 					"projectIndex" : 0
 				}
