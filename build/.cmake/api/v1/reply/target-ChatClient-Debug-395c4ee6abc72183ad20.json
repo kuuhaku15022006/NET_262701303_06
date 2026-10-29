@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "ChatServer.exe"
+			"path" : "ChatClient.exe"
 		},
 		{
-			"path" : "ChatServer.pdb"
+			"path" : "ChatClient.pdb"
 		}
 	],
 	"backtrace" : 4,
@@ -33,15 +33,18 @@
 		[
 			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
 			"CMakeLists.txt",
-			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake",
-			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsTargets.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake",
 			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6/Qt6Config.cmake",
-			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
-			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
 			"C:/Program Files/CMake/share/cmake-4.5/Modules/CMakeFindDependencyMacro.cmake",
 			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
 			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake",
-			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
+			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
 			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6/QtPublicWindowsHelpers.cmake",
 			"C:/Qt/6.12.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake:961:EVAL"
 		],
@@ -53,7 +56,7 @@
 			{
 				"command" : 3,
 				"file" : 1,
-				"line" : 29,
+				"line" : 19,
 				"parent" : 0
 			},
 			{
@@ -77,7 +80,7 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 33,
+				"line" : 23,
 				"parent" : 0
 			},
 			{
@@ -117,10 +120,58 @@
 				"parent" : 11
 			},
 			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 688,
-				"parent" : 2
+				"command" : 6,
+				"file" : 3,
+				"line" : 40,
+				"parent" : 9
+			},
+			{
+				"file" : 9,
+				"parent" : 13
+			},
+			{
+				"command" : 10,
+				"file" : 9,
+				"line" : 51,
+				"parent" : 14
+			},
+			{
+				"command" : 9,
+				"file" : 8,
+				"line" : 142,
+				"parent" : 15
+			},
+			{
+				"command" : 8,
+				"file" : 7,
+				"line" : 125,
+				"parent" : 16
+			},
+			{
+				"command" : 7,
+				"file" : 7,
+				"line" : 93,
+				"parent" : 17
+			},
+			{
+				"file" : 6,
+				"parent" : 18
+			},
+			{
+				"command" : 6,
+				"file" : 6,
+				"line" : 55,
+				"parent" : 19
+			},
+			{
+				"file" : 5,
+				"parent" : 20
+			},
+			{
+				"command" : 5,
+				"file" : 5,
+				"line" : 61,
+				"parent" : 21
 			},
 			{
 				"command" : 7,
@@ -129,62 +180,68 @@
 				"parent" : 7
 			},
 			{
-				"file" : 10,
-				"parent" : 14
+				"file" : 11,
+				"parent" : 23
 			},
 			{
 				"command" : 6,
+				"file" : 11,
+				"line" : 55,
+				"parent" : 24
+			},
+			{
 				"file" : 10,
-				"line" : 40,
-				"parent" : 15
+				"parent" : 25
 			},
 			{
-				"file" : 9,
-				"parent" : 16
+				"command" : 5,
+				"file" : 10,
+				"line" : 61,
+				"parent" : 26
 			},
 			{
-				"command" : 10,
-				"file" : 9,
-				"line" : 51,
-				"parent" : 17
+				"command" : 4,
+				"file" : 0,
+				"line" : 688,
+				"parent" : 2
 			},
 			{
 				"command" : 9,
 				"file" : 8,
 				"line" : 142,
-				"parent" : 18
+				"parent" : 15
 			},
 			{
 				"command" : 8,
 				"file" : 7,
 				"line" : 125,
-				"parent" : 19
+				"parent" : 29
 			},
 			{
 				"command" : 7,
 				"file" : 7,
 				"line" : 93,
-				"parent" : 20
+				"parent" : 30
 			},
 			{
-				"file" : 6,
-				"parent" : 21
+				"file" : 13,
+				"parent" : 31
 			},
 			{
 				"command" : 6,
-				"file" : 6,
+				"file" : 13,
 				"line" : 59,
-				"parent" : 22
+				"parent" : 32
 			},
 			{
-				"file" : 5,
-				"parent" : 23
+				"file" : 12,
+				"parent" : 33
 			},
 			{
 				"command" : 5,
-				"file" : 5,
+				"file" : 12,
 				"line" : 61,
-				"parent" : 24
+				"parent" : 34
 			},
 			{
 				"file" : 1,
@@ -193,27 +250,27 @@
 			},
 			{
 				"command" : 14,
-				"file" : 12,
+				"file" : 15,
 				"line" : 1,
-				"parent" : 26
+				"parent" : 36
 			},
 			{
 				"command" : 13,
 				"file" : 0,
 				"line" : 915,
-				"parent" : 27
+				"parent" : 37
 			},
 			{
 				"command" : 12,
 				"file" : 0,
 				"line" : 849,
-				"parent" : 28
+				"parent" : 38
 			},
 			{
 				"command" : 11,
-				"file" : 11,
+				"file" : 14,
 				"line" : 126,
-				"parent" : 29
+				"parent" : 39
 			}
 		]
 	},
@@ -225,8 +282,12 @@
 	"compileDependencies" : 
 	[
 		{
-			"backtrace" : 13,
+			"backtrace" : 28,
 			"id" : "Qt6::Core::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "Qt6::Widgets::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 5,
@@ -249,12 +310,16 @@
 			"defines" : 
 			[
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "MINGW_HAS_SECURE_API=1"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "QT_CORE_LIB"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "QT_GUI_LIB"
 				},
 				{
 					"backtrace" : 5,
@@ -265,27 +330,31 @@
 					"define" : "QT_SQL_LIB"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 5,
+					"define" : "QT_WIDGETS_LIB"
+				},
+				{
+					"backtrace" : 28,
 					"define" : "UNICODE"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "WIN32"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "WIN64"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "_ENABLE_EXTENDED_ALIGNED_STORAGE"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "_UNICODE"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"define" : "_WIN64"
 				}
 			],
@@ -293,22 +362,32 @@
 			[
 				{
 					"backtrace" : 0,
-					"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/include"
+					"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/include"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.12.0/mingw_64/include/QtCore"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.12.0/mingw_64/include"
 				},
 				{
-					"backtrace" : 13,
+					"backtrace" : 28,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.12.0/mingw_64/mkspecs/win32-g++"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "C:/Qt/6.12.0/mingw_64/include/QtWidgets"
+				},
+				{
+					"backtrace" : 5,
+					"isSystem" : true,
+					"path" : "C:/Qt/6.12.0/mingw_64/include/QtGui"
 				},
 				{
 					"backtrace" : 5,
@@ -326,8 +405,8 @@
 			{
 				"backtraces" : 
 				[
-					13,
-					13
+					28,
+					28
 				],
 				"standard" : "17"
 			},
@@ -341,14 +420,14 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"id" : "ChatClient_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,
-			"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df"
+			"id" : "ChatClient_autogen::@6890427a1f51a3e7e1df"
 		}
 	],
-	"id" : "ChatServer::@6890427a1f51a3e7e1df",
+	"id" : "ChatClient::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -356,6 +435,11 @@
 			{
 				"fragment" : "-DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG -g",
 				"role" : "flags"
+			},
+			{
+				"backtrace" : 5,
+				"fragment" : "C:\\Qt\\6.12.0\\mingw_64\\lib\\libQt6Widgets.a",
+				"role" : "libraries"
 			},
 			{
 				"backtrace" : 5,
@@ -369,21 +453,46 @@
 			},
 			{
 				"backtrace" : 12,
+				"fragment" : "C:\\Qt\\6.12.0\\mingw_64\\lib\\libQt6Gui.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 22,
+				"fragment" : "-ld3d11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 22,
+				"fragment" : "-ldxgi",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 22,
+				"fragment" : "-ldxguid",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 22,
+				"fragment" : "-ld3d12",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 27,
 				"fragment" : "-lws2_32",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 13,
+				"backtrace" : 28,
 				"fragment" : "C:\\Qt\\6.12.0\\mingw_64\\lib\\libQt6Core.a",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 25,
+				"backtrace" : 35,
 				"fragment" : "-lmpr",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 25,
+				"backtrace" : 35,
 				"fragment" : "-luserenv",
 				"role" : "libraries"
 			},
@@ -397,8 +506,12 @@
 	"linkLibraries" : 
 	[
 		{
-			"backtrace" : 13,
+			"backtrace" : 28,
 			"id" : "Qt6::Core::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "Qt6::Widgets::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 5,
@@ -409,22 +522,22 @@
 			"id" : "Qt6::Sql::@6890427a1f51a3e7e1df"
 		}
 	],
-	"name" : "ChatServer",
-	"nameOnDisk" : "ChatServer.exe",
+	"name" : "ChatClient",
+	"nameOnDisk" : "ChatClient.exe",
 	"orderDependencies" : 
 	[
-		{
-			"id" : "Qt6::moc::@6890427a1f51a3e7e1df"
-		},
 		{
 			"id" : "Qt6::uic::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"id" : "ChatClient_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 0,
-			"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df"
+			"id" : "ChatClient_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "Qt6::moc::@6890427a1f51a3e7e1df"
 		}
 	],
 	"paths" : 
@@ -474,7 +587,7 @@
 			],
 			"compileGroupIndex" : 0,
 			"isGenerated" : true,
-			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/mocs_compilation.cpp",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/mocs_compilation.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -484,16 +597,16 @@
 				4
 			],
 			"compileGroupIndex" : 0,
-			"path" : "server/main.cpp",
+			"path" : "client/main.cpp",
 			"sourceGroupIndex" : 1
 		},
 		{
-			"backtrace" : 30,
+			"backtrace" : 40,
 			"backtraces" : 
 			[
-				30
+				40
 			],
-			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer.exe.manifest",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient.exe.manifest",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -503,7 +616,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/timestamp",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/timestamp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -513,7 +626,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/timestamp.rule",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/timestamp.rule",
 			"sourceGroupIndex" : 3
 		}
 	],

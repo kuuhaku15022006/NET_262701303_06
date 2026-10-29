@@ -22,26 +22,26 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "ChatClient_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
 	"folder" : 
 	{
 		"name" : "QtInternalTargets"
 	},
-	"id" : "ChatClient_autogen::@6890427a1f51a3e7e1df",
+	"id" : "ChatServer_autogen::@6890427a1f51a3e7e1df",
 	"isGeneratorProvided" : true,
-	"name" : "ChatClient_autogen",
+	"name" : "ChatServer_autogen",
 	"orderDependencies" : 
 	[
-		{
-			"id" : "Qt6::moc::@6890427a1f51a3e7e1df"
-		},
 		{
 			"id" : "Qt6::uic::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "ChatClient_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"id" : "ChatServer_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "Qt6::moc::@6890427a1f51a3e7e1df"
 		}
 	],
 	"paths" : 
@@ -76,7 +76,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/ChatClient_autogen",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/ChatServer_autogen",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -86,7 +86,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/ChatClient_autogen.rule",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/ChatServer_autogen.rule",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -96,7 +96,7 @@
 				0
 			],
 			"isGenerated" : true,
-			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatClient_autogen/timestamp.rule",
+			"path" : "D:/code/NET_08/NET_262701303_06/build/ChatServer_autogen/timestamp.rule",
 			"sourceGroupIndex" : 1
 		}
 	],
