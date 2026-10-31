@@ -1,36 +1,21 @@
-
 cmake_minimum_required(VERSION 3.21)
-
-project(ChatApplication LANGUAGES CXX)
+project(ClientNetTest LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS
-    Widgets
-    Network
-    Sql
-)
+set(CLIENT_DIR "D:/chat-networking/NET_262701303_06/ChatApplication/client")
 
-qt_standard_project_setup()
+find_package(Qt6 REQUIRED COMPONENTS Network)
 
-qt_add_executable(ChatClient
-    client/main.cpp
+add_executable(ClientNetTest
+    net_test.cpp
+    ${CLIENT_DIR}/TCPClient.cpp
+    ${CLIENT_DIR}/TCPClient.h
 )
+target_include_directories(ClientNetTest PRIVATE ${CLIENT_DIR})
+target_link_libraries(ClientNetTest PRIVATE Qt6::Network)
 
-target_link_libraries(ChatClient PRIVATE
-    Qt6::Widgets
-    Qt6::Network
-    Qt6::Sql
-)
-
-qt_add_executable(ChatServer
-    server/main.cpp
-)
-
-target_link_libraries(ChatServer PRIVATE
-    Qt6::Network
-    Qt6::Sql
-)
+add_executable(FakeServer fake_server.cpp)
+target_link_libraries(FakeServer PRIVATE Qt6::Network)
