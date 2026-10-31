@@ -17,7 +17,7 @@ TO 'chat_app'@'127.0.0.1';
 -- 4. Cap nhat quyen
 FLUSH PRIVILEGES;
 SHOW DATABASES;
-
 USE chat_tcp;
-
 SHOW TABLES;
+DESCRIBE users;
+SELECT * FROM users;
