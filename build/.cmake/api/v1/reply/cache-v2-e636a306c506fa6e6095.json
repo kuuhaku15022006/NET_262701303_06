@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "d:/code/008/build"
+			"value" : "d:/code/NET_08/NET_262701303_06/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -503,7 +503,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/code/008/build/CMakeFiles/pkgRedirects"
+			"value" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -1551,7 +1551,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/code/008/build"
+			"value" : "D:/code/NET_08/NET_262701303_06/build"
 		},
 		{
 			"name" : "ChatApplication_IS_TOP_LEVEL",

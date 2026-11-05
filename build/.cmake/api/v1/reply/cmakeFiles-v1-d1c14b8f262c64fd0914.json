@@ -6,7 +6,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/CMakeFiles/4.5.0-rc1/CMakeSystem.cmake"
+			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/4.5.0-rc1/CMakeSystem.cmake"
 		},
 		{
 			"isExternal" : true,
@@ -24,7 +24,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/CMakeFiles/4.5.0-rc1/CMakeCXXCompiler.cmake"
+			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/4.5.0-rc1/CMakeCXXCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -88,7 +88,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "D:/code/008/build/CMakeFiles/4.5.0-rc1/CMakeRCCompiler.cmake"
+			"path" : "D:/code/NET_08/NET_262701303_06/build/CMakeFiles/4.5.0-rc1/CMakeRCCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -1530,7 +1530,7 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "D:/code/008/build",
+		"build" : "D:/code/NET_08/NET_262701303_06/build",
 		"source" : "D:/code/008/ChatApplication"
 	},
 	"version" : 
