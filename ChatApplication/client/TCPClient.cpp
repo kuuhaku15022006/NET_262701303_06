@@ -1,5 +1,6 @@
 #include "TCPClient.h"
 #include <QJsonDocument>
+#include <QJsonParseError>
 
 // Hàm khởi tạo: tạo socket và nối các tín hiệu socket ra ngoài
 TCPClient::TCPClient(QObject *parent)
@@ -7,12 +8,16 @@ TCPClient::TCPClient(QObject *parent)
     , m_socket(new QTcpSocket(this))
 {
     // Socket kết nối thành công -> báo cho GUI
-    connect(m_socket, &QTcpSocket::connected,
-            this, &TCPClient::connected);
+    connect(m_socket, &QTcpSocket::connected, this, [this]() {
+        emit connected();
+        emit connectionStateChanged(true);
+    });
 
     // Socket bị ngắt kết nối -> báo cho GUI    
-    connect(m_socket, &QTcpSocket::disconnected,
-            this, &TCPClient::disconnected);
+    connect(m_socket, &QTcpSocket::disconnected, this, [this]() {
+        emit disconnected();
+        emit connectionStateChanged(false);
+    });
 
     // Socket gặp lỗi -> chạy onSocketError        
     connect(m_socket, &QAbstractSocket::errorOccurred,
@@ -60,7 +65,7 @@ void TCPClient::onSocketError(QAbstractSocket::SocketError)
     emit connectionError(m_socket->errorString());
 }
 
-// Gửi request dạng JSON: bắt buộc có type, request_id, payload (Mục 3.2 & Checkpoint 4.2)
+// Gửi request dạng JSON: bắt buộc có type, request_id, payload (Checkpoint 4.2)
 int TCPClient::sendRequest(const QJsonObject &request)
 {
     if (!isConnected()) {
@@ -124,6 +129,61 @@ void TCPClient::onReadyRead()
     }
 }
 
-void TCPClient::processLine(const QByteArray &)
+// Phân tích dòng JSON, phân biệt response và event để phát signal cho GUI (Checkpoint 4.3)
+void TCPClient::processLine(const QByteArray &line)
 {
+    QJsonParseError parseError;
+    QJsonDocument doc = QJsonDocument::fromJson(line, &parseError);
+
+    // Bỏ qua nếu dữ liệu không phải JSON hợp lệ để tránh làm crash app
+    if (parseError.error != QJsonParseError::NoError || !doc.isObject()) {
+        return;
+    }
+
+    QJsonObject obj = doc.object();
+    QString type = obj.value(QStringLiteral("type")).toString();
+
+    if (type == QStringLiteral("response")) {
+        emit responseReceived(obj);
+    } else if (type == QStringLiteral("event")) {
+        emit eventReceived(obj);
+
+        // Nếu là sự kiện nhận tin nhắn mới thì phát ngay signal messageReceived cho GUI
+        QString eventName = obj.value(QStringLiteral("event")).toString();
+        if (eventName == QStringLiteral("message_received")) {
+            QJsonObject payload = obj.value(QStringLiteral("payload")).toObject();
+            emit messageReceived(payload.isEmpty() ? obj : payload);
+        }
+    }
+}
+
+// Gửi yêu cầu đăng nhập (Checkpoint 4.4)
+void TCPClient::login(const QString &username, const QString &password)
+{
+    QJsonObject payload;
+    payload.insert(QStringLiteral("username"), username);
+    payload.insert(QStringLiteral("password"), password);
+
+    QJsonObject request;
+    request.insert(QStringLiteral("type"), QStringLiteral("login"));
+    request.insert(QStringLiteral("payload"), payload);
+
+    sendRequest(request);
+}
+
+// Gửi yêu cầu đăng ký tài khoản 
+void TCPClient::registerUser(const QString &username,
+                             const QString &password,
+                             const QString &displayName)
+{
+    QJsonObject payload;
+    payload.insert(QStringLiteral("username"), username);
+    payload.insert(QStringLiteral("password"), password);
+    payload.insert(QStringLiteral("display_name"), displayName);
+
+    QJsonObject request;
+    request.insert(QStringLiteral("type"), QStringLiteral("register"));
+    request.insert(QStringLiteral("payload"), payload);
+
+    sendRequest(request);
 }
