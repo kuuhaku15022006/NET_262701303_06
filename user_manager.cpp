@@ -115,3 +115,112 @@ bool UserManager::registerUser(
 
     return true;
 }
+// Chuc nang 2: Dang nhap tai khoan
+QVariantMap UserManager::authenticate(
+    const QString &username,
+    const QString &password,
+    QString *errorText)
+{
+    // Buoc 1: Kiem tra du lieu dau vao
+    const QString cleanUsername = username.trimmed();
+
+    if (cleanUsername.isEmpty() || password.isEmpty())
+    {
+        if (errorText)
+        {
+            *errorText = QStringLiteral(
+                "Username va password khong duoc de trong."
+            );
+        }
+
+        return {};
+    }
+
+    // Buoc 2: Tim tai khoan trong MySQL
+    QSqlQuery query = m_database.query(
+        QStringLiteral(
+            "SELECT id, username, password_hash, "
+            "password_salt, display_name, avatar "
+            "FROM users WHERE username = ?"
+        ),
+        {cleanUsername}
+    );
+
+    // Buoc 3: Kiem tra loi truy van
+    if (!query.isActive())
+    {
+        if (errorText)
+        {
+            *errorText = m_database.lastError();
+        }
+
+        return {};
+    }
+
+    // Buoc 4: Kiem tra username co ton tai khong
+    if (!query.next())
+    {
+        if (errorText)
+        {
+            *errorText = QStringLiteral(
+                "Sai username hoac password."
+            );
+        }
+
+        return {};
+    }
+
+    // Buoc 5: Lay hash va salt tu database
+    const QString expectedHash = query.value(2).toString();
+
+    const QString salt = query.value(3).toString();
+
+    // Buoc 6: Bam password nguoi dung nhap
+    const QString actualHash = hashPassword(
+        password,
+        salt
+    );
+
+    // Buoc 7: So sanh hash
+    if (actualHash != expectedHash)
+    {
+        if (errorText)
+        {
+            *errorText = QStringLiteral(
+                "Sai username hoac password."
+            );
+        }
+
+        return {};
+    }
+
+    // Buoc 8: Dang nhap thanh cong
+    QVariantMap user;
+
+    user.insert(
+        QStringLiteral("id"),
+        query.value(0)
+    );
+
+    user.insert(
+        QStringLiteral("username"),
+        query.value(1)
+    );
+
+    user.insert(
+        QStringLiteral("display_name"),
+        query.value(4)
+    );
+
+    user.insert(
+        QStringLiteral("avatar"),
+        query.value(5)
+    );
+
+    if (errorText)
+    {
+        errorText->clear();
+    }
+
+    return user;
+}

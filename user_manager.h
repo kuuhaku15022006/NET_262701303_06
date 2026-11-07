@@ -3,7 +3,7 @@
 
 #include "database.h"
 #include <QString>
-
+#include <QVariantMap>
 class UserManager
 {
 public:
@@ -15,7 +15,11 @@ public:
         const QString &displayName,
         QString *errorText = nullptr
     );
-
+    QVariantMap authenticate(
+    const QString &username,
+    const QString &password,
+    QString *errorText = nullptr
+);
 private:
     static QString createSalt();
 

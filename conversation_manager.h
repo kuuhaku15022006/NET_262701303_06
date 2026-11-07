@@ -1,23 +1,25 @@
-#pragma once
+#ifndef CONVERSATION_MANAGER_H
+#define CONVERSATION_MANAGER_H
 
-#include "database.h"
+#include <QVariantList>
 #include <QVariantMap>
+
+class Database;
 
 class ConversationManager
 {
 public:
-    explicit ConversationManager(Database &database);
+    // Constructor
+    explicit ConversationManager(Database &db);
 
-    QList<QVariantMap> getUserConversations(qint64 userId,
-                                            QString *errorText = nullptr);
-    QList<QVariantMap> getMembers(qint64 conversationId,
-                                  QString *errorText = nullptr);
+    // Lay danh sach hoi thoai theo User ID
+    QVariantList getConversationsByUserId(int userId);
 
-    // Utility for tests/admin workflows; can be restricted later to server-side use.
-    qint64 createConversation(const QString &name,
-                              const QList<qint64> &memberIds,
-                              QString *errorText = nullptr);
+    // Lay danh sach thanh vien theo Conversation ID
+    QVariantList getMembersByConversationId(int conversationId);
 
 private:
-    Database &m_database;
+    Database &database;
 };
+
+#endif // CONVERSATION_MANAGER_H
