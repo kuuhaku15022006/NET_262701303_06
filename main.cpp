@@ -15,14 +15,39 @@ int main(int argc, char *argv[])
     QTextStream out(stdout);
 
     // Khoi tao Database
-    Database database;
+    // Khoi tao Database
+Database database;
 
-    if (!database.open())
-    {
-        qCritical() << "Khong the ket noi MySQL:"
-                   << database.lastError();
-        return 1;
-    }
+// Ket noi MySQL
+QString dbPassword = qEnvironmentVariable("MatKhau103528102026");
+
+if (dbPassword.isEmpty())
+{
+    qCritical() << "Chua cau hinh CHAT_DB_PASSWORD!";
+    return 1;
+}
+
+if (!database.connectToMySQL(
+        "127.0.0.1",
+        3306,
+        "chat_tcp",
+        "chat_app",
+        dbPassword))
+{
+    qCritical() << "Khong the ket noi MySQL:"
+               << database.lastError();
+    return 1;
+}
+
+qDebug() << "Ket noi MySQL thanh cong!";
+
+// Khoi tao bang
+if (!database.initializeTables())
+{
+    qCritical() << "Khong the tao bang:"
+               << database.lastError();
+    return 1;
+}
 
     // Khoi tao cac Manager
     UserManager users(database);

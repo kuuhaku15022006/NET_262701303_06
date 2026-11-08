@@ -1,0 +1,5 @@
+C:/HOC TAP/build/CMakeFiles/ChatTCP.dir
+C:/HOC TAP/build/CMakeFiles/edit_cache.dir
+C:/HOC TAP/build/CMakeFiles/rebuild_cache.dir
+C:/HOC TAP/build/CMakeFiles/ChatTCP_autogen_timestamp_deps.dir
+C:/HOC TAP/build/CMakeFiles/ChatTCP_autogen.dir

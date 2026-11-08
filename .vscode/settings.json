@@ -1,4 +1,6 @@
+
 {
-    "cmake.sourceDirectory": "D:/code/008/ChatApplication",
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "cmake.sourceDirectory": "C:/HOC TAP",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.cmakePath": "C:/Qt/Tools/CMake_64/bin/cmake.exe"
 }
