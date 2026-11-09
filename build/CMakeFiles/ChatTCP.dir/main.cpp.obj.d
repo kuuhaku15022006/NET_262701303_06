@@ -358,6 +358,7 @@ CMakeFiles/ChatTCP.dir/main.cpp.obj: C:\HOC\ TAP\main.cpp \
  C:/Qt/6.12.0/mingw_64/include/QtCore/qvariantmap.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QMap \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QString \
+ C:/Qt/6.12.0/mingw_64/include/QtCore/QList \
  C:\HOC\ TAP\conversation_manager.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QCoreApplication \
  C:/Qt/6.12.0/mingw_64/include/QtCore/qcoreapplication.h \

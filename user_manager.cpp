@@ -223,4 +223,99 @@ QVariantMap UserManager::authenticate(
     }
 
     return user;
+    
+}
+// Chuc nang 3: Tim user theo username hoac display_name
+bool UserManager::findUsers(
+    const QString &keyword,
+    QList<QVariantMap> *users,
+    QString *errorText
+)
+{
+    // Buoc 1: Kiem tra danh sach ket qua
+    if (users == nullptr)
+    {
+        if (errorText)
+        {
+            *errorText = "Danh sach users khong hop le.";
+        }
+
+        return false;
+    }
+
+    users->clear();
+
+    // Buoc 2: Kiem tra tu khoa
+    const QString cleanKeyword = keyword.trimmed();
+
+    if (cleanKeyword.isEmpty())
+    {
+        if (errorText)
+        {
+            *errorText = "Tu khoa tim kiem khong duoc de trong.";
+        }
+
+        return false;
+    }
+
+    // Buoc 3: Tao tu khoa LIKE
+    const QString searchPattern =
+        "%" + cleanKeyword + "%";
+
+    // Buoc 4: Truy van MySQL
+    QSqlQuery query = m_database.query(
+        QStringLiteral(
+            "SELECT id, username, display_name, created_at "
+            "FROM users "
+            "WHERE username LIKE ? "
+            "OR display_name LIKE ? "
+            "ORDER BY id ASC"
+        ),
+        {
+            searchPattern,
+            searchPattern
+        }
+    );
+
+    // Buoc 5: Kiem tra loi truy van
+    if (!query.isActive())
+    {
+        if (errorText)
+        {
+            *errorText = m_database.lastError();
+        }
+
+        return false;
+    }
+
+    // Buoc 6: Lay danh sach user
+    while (query.next())
+    {
+        QVariantMap user;
+
+        user.insert("id", query.value(0));
+        user.insert("username", query.value(1));
+        user.insert("display_name", query.value(2));
+        user.insert("created_at", query.value(3));
+
+        users->append(user);
+    }
+
+    // Buoc 7: Kiem tra ket qua
+    if (users->isEmpty())
+    {
+        if (errorText)
+        {
+            *errorText = "Khong tim thay user.";
+        }
+
+        return true;
+    }
+
+    if (errorText)
+    {
+        errorText->clear();
+    }
+
+    return true;
 }

@@ -359,7 +359,5 @@ CMakeFiles/ChatTCP.dir/conversation_manager.cpp.obj: \
  C:/Qt/6.12.0/mingw_64/include/QtSql/QSqlQuery \
  C:/Qt/6.12.0/mingw_64/include/QtSql/qsqlquery.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QString \
- C:/Qt/6.12.0/mingw_64/include/QtSql/QSqlError \
- C:/Qt/6.12.0/mingw_64/include/QtSql/qsqlerror.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QVariant \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QDebug

@@ -216,11 +216,11 @@
 	"dependencies" : 
 	[
 		{
-			"id" : "ChatTCP_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 0,
 			"id" : "ChatTCP_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "ChatTCP_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "ChatTCP::@6890427a1f51a3e7e1df",

@@ -1,12 +1,18 @@
+
 #include "database.h"
 
 #include <QSqlError>
 #include <QSqlRecord>
+#include <QSqlQuery>
+#include <QSqlDatabase>
+#include <QVariant>
+#include <QStringList>
 #include <QUuid>
 
 Database::Database()
-    : m_connectionName(QStringLiteral("chat_tcp_nv2_%1")
-                           .arg(QUuid::createUuid().toString(QUuid::WithoutBraces)))
+    : m_connectionName(
+          QStringLiteral("chat_tcp_nv2_%1")
+              .arg(QUuid::createUuid().toString(QUuid::WithoutBraces)))
 {
 }
 
@@ -15,19 +21,37 @@ Database::~Database()
     close();
 }
 
+// ==================== CONNECT TO MYSQL ====================
+
 bool Database::connectToMySQL(const QString &host,
                               int port,
                               const QString &databaseName,
                               const QString &username,
                               const QString &password)
 {
-    if (m_db.isValid())
+    if (m_db.isValid()) {
         close();
+    }
 
-    m_db = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"), m_connectionName);
-    m_db.setHostName(host);
-    m_db.setPort(port);
-    m_db.setDatabaseName(databaseName);
+    // Su dung QODBC thay cho QMYSQL
+    m_db = QSqlDatabase::addDatabase(
+        QStringLiteral("QODBC"),
+        m_connectionName
+    );
+
+    // Chuoi ket noi MySQL ODBC Unicode Driver 26.10
+    QString connectionString =
+        QStringLiteral(
+            "DRIVER={MySQL ODBC 26.10 Unicode Driver};"
+            "SERVER=%1;"
+            "PORT=%2;"
+            "DATABASE=%3;"
+        )
+        .arg(host)
+        .arg(port)
+        .arg(databaseName);
+
+    m_db.setDatabaseName(connectionString);
     m_db.setUserName(username);
     m_db.setPassword(password);
 
@@ -39,87 +63,135 @@ bool Database::connectToMySQL(const QString &host,
 
     m_connected = true;
     m_lastError.clear();
+
     return true;
 }
+
+// ==================== CLOSE DATABASE ====================
 
 void Database::close()
 {
     if (m_db.isValid()) {
         m_db.close();
+
         m_db = QSqlDatabase();
+
         QSqlDatabase::removeDatabase(m_connectionName);
     }
+
     m_connected = false;
 }
+
+// ==================== INITIALIZE TABLES ====================
 
 bool Database::initializeTables()
 {
     if (!m_connected) {
-        m_lastError = QStringLiteral("Database chưa được kết nối.");
+        m_lastError =
+            QStringLiteral("Database chưa được kết nối.");
         return false;
     }
 
     const QStringList statements = {
+
+        // ==================== USERS ====================
+
         QStringLiteral(
             "CREATE TABLE IF NOT EXISTS users ("
-            "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+            "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"
             "username VARCHAR(50) NOT NULL UNIQUE,"
             "password_hash CHAR(64) NOT NULL,"
             "password_salt CHAR(36) NOT NULL,"
             "display_name VARCHAR(100) NOT NULL,"
             "avatar VARCHAR(500) NULL,"
             "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"),
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        ),
+
+        // ==================== CONVERSATIONS ====================
+
         QStringLiteral(
             "CREATE TABLE IF NOT EXISTS conversations ("
             "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
             "name VARCHAR(150) NULL,"
             "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"),
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        ),
+
+        // ==================== CONVERSATION MEMBERS ====================
+
         QStringLiteral(
             "CREATE TABLE IF NOT EXISTS conversation_members ("
             "conversation_id BIGINT UNSIGNED NOT NULL,"
-            "user_id BIGINT UNSIGNED NOT NULL,"
+            "user_id INT NOT NULL,"
             "joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
             "PRIMARY KEY (conversation_id, user_id),"
-            "CONSTRAINT fk_cm_conversation FOREIGN KEY (conversation_id) "
+
+            "CONSTRAINT fk_cm_conversation "
+            "FOREIGN KEY (conversation_id) "
             "REFERENCES conversations(id) ON DELETE CASCADE,"
-            "CONSTRAINT fk_cm_user FOREIGN KEY (user_id) "
+
+            "CONSTRAINT fk_cm_user "
+            "FOREIGN KEY (user_id) "
             "REFERENCES users(id) ON DELETE CASCADE"
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"),
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        ),
+
+        // ==================== MESSAGES ====================
+
         QStringLiteral(
             "CREATE TABLE IF NOT EXISTS messages ("
             "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
             "conversation_id BIGINT UNSIGNED NOT NULL,"
-            "sender_id BIGINT UNSIGNED NOT NULL,"
+            "sender_id INT NOT NULL,"
             "content TEXT NOT NULL,"
             "sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-            "CONSTRAINT fk_msg_conversation FOREIGN KEY (conversation_id) "
+
+            "CONSTRAINT fk_msg_conversation "
+            "FOREIGN KEY (conversation_id) "
             "REFERENCES conversations(id) ON DELETE CASCADE,"
-            "CONSTRAINT fk_msg_sender FOREIGN KEY (sender_id) "
+
+            "CONSTRAINT fk_msg_sender "
+            "FOREIGN KEY (sender_id) "
             "REFERENCES users(id) ON DELETE CASCADE,"
-            "INDEX idx_messages_conversation_time (conversation_id, sent_at)"
-            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4")
+
+            "INDEX idx_messages_conversation_time "
+            "(conversation_id, sent_at)"
+            ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        )
     };
 
+    // ==================== EXECUTE SQL ====================
+
     for (const QString &statement : statements) {
-        if (!execute(statement))
+        if (!execute(statement)) {
             return false;
+        }
     }
+
     return true;
 }
 
-bool Database::execute(const QString &sql, const QVariantList &params)
+// ==================== EXECUTE ====================
+
+bool Database::execute(const QString &sql,
+                      const QVariantList &params)
 {
     QSqlQuery q = query(sql, params);
+
     return q.isActive();
 }
 
-QSqlQuery Database::query(const QString &sql, const QVariantList &params)
+// ==================== QUERY ====================
+
+QSqlQuery Database::query(const QString &sql,
+                          const QVariantList &params)
 {
     QSqlQuery q(m_db);
+
     if (!m_connected) {
-        m_lastError = QStringLiteral("Database chưa được kết nối.");
+        m_lastError =
+            QStringLiteral("Database chưa được kết nối.");
         return q;
     }
 
@@ -128,16 +200,21 @@ QSqlQuery Database::query(const QString &sql, const QVariantList &params)
         return q;
     }
 
-    for (const QVariant &param : params)
+    for (const QVariant &param : params) {
         q.addBindValue(param);
+    }
 
-    if (!q.exec())
+    if (!q.exec()) {
         m_lastError = q.lastError().text();
-    else
+    }
+    else {
         m_lastError.clear();
+    }
 
     return q;
 }
+
+// ==================== LAST ERROR ====================
 
 QString Database::lastError() const
 {

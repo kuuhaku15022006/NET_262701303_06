@@ -359,6 +359,7 @@ CMakeFiles/ChatTCP.dir/user_manager.cpp.obj: C:\HOC\ TAP\user_manager.cpp \
  C:/Qt/6.12.0/mingw_64/include/QtCore/qvariantmap.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QMap \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QString \
+ C:/Qt/6.12.0/mingw_64/include/QtCore/QList \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QCryptographicHash \
  C:/Qt/6.12.0/mingw_64/include/QtCore/qcryptographichash.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/qspan.h \

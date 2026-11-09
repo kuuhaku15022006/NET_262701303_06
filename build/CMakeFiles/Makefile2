@@ -79,8 +79,8 @@ clean: CMakeFiles/ChatTCP_autogen.dir/clean
 # Target rules for target CMakeFiles/ChatTCP.dir
 
 # All Build rule for target.
-CMakeFiles/ChatTCP.dir/all: CMakeFiles/ChatTCP_autogen_timestamp_deps.dir/all
 CMakeFiles/ChatTCP.dir/all: CMakeFiles/ChatTCP_autogen.dir/all
+CMakeFiles/ChatTCP.dir/all: CMakeFiles/ChatTCP_autogen_timestamp_deps.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChatTCP.dir\build.make CMakeFiles/ChatTCP.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ChatTCP.dir\build.make CMakeFiles/ChatTCP.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="C:\HOC TAP\build\CMakeFiles" --progress-num=1,2,3,4,5,6 "Built target ChatTCP"

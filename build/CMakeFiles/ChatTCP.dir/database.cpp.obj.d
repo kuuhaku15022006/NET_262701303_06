@@ -358,6 +358,8 @@ CMakeFiles/ChatTCP.dir/database.cpp.obj: C:\HOC\ TAP\database.cpp \
  C:/Qt/6.12.0/mingw_64/include/QtSql/qsqlerror.h \
  C:/Qt/6.12.0/mingw_64/include/QtSql/QSqlRecord \
  C:/Qt/6.12.0/mingw_64/include/QtSql/qsqlrecord.h \
+ C:/Qt/6.12.0/mingw_64/include/QtCore/QVariant \
+ C:/Qt/6.12.0/mingw_64/include/QtCore/QStringList \
  C:/Qt/6.12.0/mingw_64/include/QtCore/QUuid \
  C:/Qt/6.12.0/mingw_64/include/QtCore/quuid.h \
  C:/Qt/6.12.0/mingw_64/include/QtCore/qendian.h
