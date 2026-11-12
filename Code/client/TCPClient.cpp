@@ -187,3 +187,63 @@ void TCPClient::registerUser(const QString &username,
 
     sendRequest(request);
 }
+
+// Lấy danh sách các cuộc hội thoại của user hiện tại (Checkpoint 4.4)
+void TCPClient::getConversations()
+{
+    QJsonObject request;
+    request.insert(QStringLiteral("type"), QStringLiteral("get_conversations"));
+    request.insert(QStringLiteral("payload"), QJsonObject()); // không cần tham số phụ
+
+    sendRequest(request);
+}
+
+// Lấy lịch sử tin nhắn của một cuộc hội thoại, có hỗ trợ phân trang limit/offset (Checkpoint 4.4)
+void TCPClient::getHistory(int conversationId, int limit, int offset)
+{
+    QJsonObject payload;
+    payload.insert(QStringLiteral("conversation_id"), conversationId);
+    payload.insert(QStringLiteral("limit"), limit);
+    payload.insert(QStringLiteral("offset"), offset);
+
+    QJsonObject request;
+    request.insert(QStringLiteral("type"), QStringLiteral("get_history"));
+    request.insert(QStringLiteral("payload"), payload);
+
+    sendRequest(request);
+}
+
+// Gửi tin nhắn mới (hỗ trợ cả gửi tin thường và trả lời tin nhắn gốc qua replyTo) (Checkpoint 4.4)
+void TCPClient::sendMessage(int conversationId, const QString &content, int replyTo)
+{
+    QJsonObject payload;
+    payload.insert(QStringLiteral("conversation_id"), conversationId);
+    payload.insert(QStringLiteral("content"), content);
+
+    // Nếu replyTo > 0 thì gửi ID tin nhắn gốc, ngược lại để null theo quy ước protocol
+    if (replyTo > 0) {
+        payload.insert(QStringLiteral("reply_to"), replyTo);
+    } else {
+        payload.insert(QStringLiteral("reply_to"), QJsonValue::Null);
+    }
+
+    QJsonObject request;
+    request.insert(QStringLiteral("type"), QStringLiteral("send_message"));
+    request.insert(QStringLiteral("payload"), payload);
+
+    sendRequest(request);
+}
+
+// Chuyển tiếp (forward) một tin nhắn sang cuộc hội thoại khác (Checkpoint 4.4)
+void TCPClient::forwardMessage(int messageId, int targetConversationId)
+{
+    QJsonObject payload;
+    payload.insert(QStringLiteral("message_id"), messageId);
+    payload.insert(QStringLiteral("target_conversation_id"), targetConversationId);
+
+    QJsonObject request;
+    request.insert(QStringLiteral("type"), QStringLiteral("forward_message"));
+    request.insert(QStringLiteral("payload"), payload);
+
+    sendRequest(request);
+}
