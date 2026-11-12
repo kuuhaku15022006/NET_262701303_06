@@ -26,11 +26,22 @@ target_link_libraries(ChatClient PRIVATE
     Qt6::Sql
 )
 
+
 qt_add_executable(ChatServer
     server/main.cpp
+
+    server/ChatServer.h
+    server/ChatServer.cpp
+
+    server/ClientHandler.h
+    server/ClientHandler.cpp
+
+    server/ConnectionManager.h
+    server/ConnectionManager.cpp
 )
 
-target_link_libraries(ChatServer PRIVATE
+
+target_link_libraries(ChatServer PRIVATE    
     Qt6::Network
     Qt6::Sql
 )
