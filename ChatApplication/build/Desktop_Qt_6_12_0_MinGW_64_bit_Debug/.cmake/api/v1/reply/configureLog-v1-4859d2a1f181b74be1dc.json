@@ -1,0 +1,17 @@
+{
+	"eventKindNames" : 
+	[
+		"message-v1",
+		"try_compile-v1",
+		"try_run-v1",
+		"find-v1",
+		"find_package-v1"
+	],
+	"kind" : "configureLog",
+	"path" : "D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/CMakeConfigureLog.yaml",
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}

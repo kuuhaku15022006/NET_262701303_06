@@ -1,0 +1,7 @@
+set(__QT_DEPLOY_TARGETS "ChatClient;ChatServer")
+set(__QT_DEPLOY_TARGET_ChatClient_FILE D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/ChatClient.exe)
+set(__QT_DEPLOY_TARGET_ChatClient_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_ChatClient_RUNTIME_DLLS C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Widgets.dll;C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Network.dll;C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Sql.dll;C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Gui.dll;C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Core.dll)
+set(__QT_DEPLOY_TARGET_ChatServer_FILE D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/ChatServer.exe)
+set(__QT_DEPLOY_TARGET_ChatServer_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_ChatServer_RUNTIME_DLLS C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Network.dll;C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Sql.dll;C:/Users/ADMIN/Downloads/6.12.0/mingw_64/bin/Qt6Core.dll)

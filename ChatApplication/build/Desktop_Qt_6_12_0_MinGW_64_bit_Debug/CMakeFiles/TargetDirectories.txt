@@ -1,0 +1,8 @@
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/ChatClient.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/ChatServer.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/edit_cache.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/rebuild_cache.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/ChatClient_autogen_timestamp_deps.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/ChatClient_autogen.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/ChatServer_autogen_timestamp_deps.dir
+D:/New folder/ChatApplication/build/Desktop_Qt_6_12_0_MinGW_64_bit_Debug/CMakeFiles/ChatServer_autogen.dir
