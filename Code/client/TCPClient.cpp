@@ -1,20 +1,43 @@
 #include "TCPClient.h"
 #include <QJsonDocument>
 #include <QJsonParseError>
+#include <QJsonValue>
 
 // Hàm khởi tạo: tạo socket và nối các tín hiệu socket ra ngoài
 TCPClient::TCPClient(QObject *parent)
     : QObject(parent)
     , m_socket(new QTcpSocket(this))
+    , m_connectTimer(new QTimer(this))
+    , m_requestTimer(new QTimer(this))
 {
+    // Quá 5s chưa nối được server thì hủy và báo lỗi cho GUI (Checkpoint 4.5)
+    m_connectTimer->setSingleShot(true);
+    m_connectTimer->setInterval(5000);
+    connect(m_connectTimer, &QTimer::timeout, this, [this]() {
+        if (m_socket->state() != QAbstractSocket::ConnectedState) {
+            m_socket->abort();
+            emit connectionError(QStringLiteral("Kết nối quá thời gian (timeout)"));
+        }
+    });
+
+    // Gửi request mà quá 5s server không trả lời thì báo timeout (Checkpoint 4.5)
+    m_requestTimer->setSingleShot(true);
+    m_requestTimer->setInterval(5000);
+    connect(m_requestTimer, &QTimer::timeout, this, [this]() {
+        emit connectionError(QStringLiteral("Server không phản hồi (request timeout)"));
+    });
+
     // Socket kết nối thành công -> báo cho GUI
     connect(m_socket, &QTcpSocket::connected, this, [this]() {
+        m_connectTimer->stop(); // Nối được rồi thì tắt timer chờ kết nối
         emit connected();
         emit connectionStateChanged(true);
     });
 
     // Socket bị ngắt kết nối -> báo cho GUI    
     connect(m_socket, &QTcpSocket::disconnected, this, [this]() {
+        m_connectTimer->stop();
+        m_requestTimer->stop();
         emit disconnected();
         emit connectionStateChanged(false);
     });
@@ -36,17 +59,28 @@ TCPClient::~TCPClient()
 // Conect to server (Checkpoint 4.1)
 void TCPClient::connectToServer(const QString &host, quint16 port)
 {
+    // Kiểm tra host/port trước để tránh truyền rỗng (Checkpoint 4.5)
+    if (host.trimmed().isEmpty() || port == 0) {
+        emit connectionError(QStringLiteral("Host hoặc port không hợp lệ"));
+        return;
+    }
+
     // Đang có kết nối cũ thì cúp trước tránh 2 kết nối trùng nhau
     if (m_socket->state() != QAbstractSocket::UnconnectedState)
         m_socket->abort();
 
+    m_requestTimer->stop();
     m_buffer.clear(); // xóa dữ liệu lần trước 
-    m_socket->connectToHost(host, port); // bắt đầu nối, không chờ kết quả
+    m_connectTimer->start(); // Bắt đầu đếm ngược thời gian kết nối (Checkpoint 4.5)
+    m_socket->connectToHost(host.trimmed(), port); // bắt đầu nối, không chờ kết quả
 }
 
 // Disconnect from server (Checkpoint 4.1)
 void TCPClient::disconnectFromServer()
 {
+    m_connectTimer->stop();
+    m_requestTimer->stop();
+
     if (m_socket->state() != QAbstractSocket::UnconnectedState)
         m_socket->disconnectFromHost();
 
@@ -62,6 +96,8 @@ bool TCPClient::isConnected() const
 // Socket gặp lỗi -> báo cho GUI
 void TCPClient::onSocketError(QAbstractSocket::SocketError)
 {
+    m_connectTimer->stop();
+    m_requestTimer->stop();
     emit connectionError(m_socket->errorString());
 }
 
@@ -104,6 +140,9 @@ int TCPClient::sendRequest(const QJsonObject &request)
         return -1;
     }
 
+    // Gửi xong thì bắt đầu chờ response từ server (Checkpoint 4.5)
+    m_requestTimer->start();
+
     return requestId;
 }
 
@@ -115,7 +154,7 @@ void TCPClient::onReadyRead()
 
     // Tách từng dòng phân cách bởi ký tự '\n'
     while (true) {
-        int newlineIndex = m_buffer.indexOf('\n');
+        int newlineIndex = m_buffer.indexOf('\n'); 
         if (newlineIndex == -1)
             break; // Chưa đủ một dòng JSON hoàn chỉnh, chờ lần readyRead tiếp theo
 
@@ -144,6 +183,7 @@ void TCPClient::processLine(const QByteArray &line)
     QString type = obj.value(QStringLiteral("type")).toString();
 
     if (type == QStringLiteral("response")) {
+        m_requestTimer->stop(); // Server trả lời rồi nên tắt timer timeout (Checkpoint 4.5)
         emit responseReceived(obj);
     } else if (type == QStringLiteral("event")) {
         emit eventReceived(obj);
