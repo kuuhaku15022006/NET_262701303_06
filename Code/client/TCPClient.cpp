@@ -9,6 +9,7 @@ TCPClient::TCPClient(QObject *parent)
     , m_socket(new QTcpSocket(this))
     , m_connectTimer(new QTimer(this))
     , m_requestTimer(new QTimer(this))
+    , m_reconnectTimer(new QTimer(this))
 {
     // Quá 5s chưa nối được server thì hủy và báo lỗi cho GUI (Checkpoint 4.5)
     m_connectTimer->setSingleShot(true);
@@ -17,6 +18,10 @@ TCPClient::TCPClient(QObject *parent)
         if (m_socket->state() != QAbstractSocket::ConnectedState) {
             m_socket->abort();
             emit connectionError(QStringLiteral("Kết nối quá thời gian (timeout)"));
+
+            // Nếu đang bật tự nối lại thì hẹn giờ thử lại (Checkpoint 4.6)
+            if (m_autoReconnect && !m_manualDisconnect)
+                m_reconnectTimer->start();
         }
     });
 
@@ -27,9 +32,19 @@ TCPClient::TCPClient(QObject *parent)
         emit connectionError(QStringLiteral("Server không phản hồi (request timeout)"));
     });
 
+    // Hết thời gian chờ thì tự động gọi reconnect (Checkpoint 4.6)
+    m_reconnectTimer->setSingleShot(true);
+    m_reconnectTimer->setInterval(3000);
+    connect(m_reconnectTimer, &QTimer::timeout, this, [this]() {
+        if (!isConnected() && !m_manualDisconnect) {
+            reconnect();
+        }
+    });
+
     // Socket kết nối thành công -> báo cho GUI
     connect(m_socket, &QTcpSocket::connected, this, [this]() {
-        m_connectTimer->stop(); // Nối được rồi thì tắt timer chờ kết nối
+        m_connectTimer->stop();   // Nối được rồi thì tắt timer chờ kết nối
+        m_reconnectTimer->stop(); // Tắt luôn timer reconnect nếu đang chạy
         emit connected();
         emit connectionStateChanged(true);
     });
@@ -40,6 +55,11 @@ TCPClient::TCPClient(QObject *parent)
         m_requestTimer->stop();
         emit disconnected();
         emit connectionStateChanged(false);
+
+        // Nếu server tắt giữa chừng (không phải do mình tự ngắt) thì tự nối lại (Checkpoint 4.6)
+        if (m_autoReconnect && !m_manualDisconnect && !m_lastHost.isEmpty() && m_lastPort > 0) {
+            m_reconnectTimer->start();
+        }
     });
 
     // Socket gặp lỗi -> chạy onSocketError        
@@ -65,26 +85,56 @@ void TCPClient::connectToServer(const QString &host, quint16 port)
         return;
     }
 
+    // Lưu lại địa chỉ server để dùng cho reconnect (Checkpoint 4.6)
+    m_lastHost = host.trimmed();
+    m_lastPort = port;
+    m_manualDisconnect = false;
+
     // Đang có kết nối cũ thì cúp trước tránh 2 kết nối trùng nhau
     if (m_socket->state() != QAbstractSocket::UnconnectedState)
         m_socket->abort();
 
+    m_reconnectTimer->stop();
     m_requestTimer->stop();
     m_buffer.clear(); // xóa dữ liệu lần trước 
     m_connectTimer->start(); // Bắt đầu đếm ngược thời gian kết nối (Checkpoint 4.5)
-    m_socket->connectToHost(host.trimmed(), port); // bắt đầu nối, không chờ kết quả
+    m_socket->connectToHost(m_lastHost, m_lastPort); // bắt đầu nối, không chờ kết quả
 }
 
 // Disconnect from server (Checkpoint 4.1)
 void TCPClient::disconnectFromServer()
 {
+    m_manualDisconnect = true; // Đánh dấu mình chủ động ngắt để không tự reconnect
     m_connectTimer->stop();
     m_requestTimer->stop();
+    m_reconnectTimer->stop();
 
     if (m_socket->state() != QAbstractSocket::UnconnectedState)
         m_socket->disconnectFromHost();
 
     m_buffer.clear();
+}
+
+// Kết nối lại vào host/port đã lưu ở lần trước (Checkpoint 4.6)
+void TCPClient::reconnect()
+{
+    if (m_lastHost.isEmpty() || m_lastPort == 0) {
+        emit connectionError(QStringLiteral("Chưa có địa chỉ server để kết nối lại"));
+        return;
+    }
+
+    connectToServer(m_lastHost, m_lastPort);
+}
+
+// Bật hoặc tắt chế độ tự động kết nối lại sau mỗi intervalMs (Checkpoint 4.6)
+void TCPClient::setAutoReconnect(bool enabled, int intervalMs)
+{
+    m_autoReconnect = enabled;
+    if (intervalMs > 0)
+        m_reconnectTimer->setInterval(intervalMs);
+
+    if (!enabled)
+        m_reconnectTimer->stop();
 }
 
 // Kiểm tra trạng thái kết nối 
@@ -99,6 +149,12 @@ void TCPClient::onSocketError(QAbstractSocket::SocketError)
     m_connectTimer->stop();
     m_requestTimer->stop();
     emit connectionError(m_socket->errorString());
+
+    // Nếu nối thất bại mà đang bật auto reconnect thì hẹn giờ thử lại (Checkpoint 4.6)
+    if (m_autoReconnect && !m_manualDisconnect && !isConnected() &&
+        !m_lastHost.isEmpty() && m_lastPort > 0) {
+        m_reconnectTimer->start();
+    }
 }
 
 // Gửi request dạng JSON: bắt buộc có type, request_id, payload (Checkpoint 4.2)
