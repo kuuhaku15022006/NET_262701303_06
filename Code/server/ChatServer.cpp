@@ -51,6 +51,7 @@ QString ChatServer::errorString() const
     return server->errorString();
 }
 
+
 void ChatServer::stopServer()
 {
     if (!server->isListening() && clients.isEmpty())
@@ -64,9 +65,11 @@ void ChatServer::stopServer()
 
         QTcpSocket* socket = client->getSocket();
 
+        // Ngắt các signal callback từ ClientHandler về ChatServer
+        disconnect(client, nullptr, this, nullptr);
+
         if (socket) {
             connectionManager->removeSocket(socket);
-
             socket->abort();
         }
 
@@ -75,6 +78,7 @@ void ChatServer::stopServer()
 
     emit serverStopped();
 }
+
 
 bool ChatServer::isRunning() const
 {
@@ -100,8 +104,19 @@ void ChatServer::handleNewConnection()
             this, [this](ClientHandler* handler,
                 const QByteArray& message) {
 
+                    QJsonObject request;
+                    QString error;
+
+                    if (!Protocol::decode(message, request, &error)) {
+                        qWarning() << "Invalid JSON:" << error;
+                        return;
+                    }
+
                     emit clientMessageReceived(
                         handler->getSocket(), message);
+
+                    emit clientRequestReceived(
+                        handler->getSocket(), request);
             });
 
         connect(client, &ClientHandler::clientDisconnected,

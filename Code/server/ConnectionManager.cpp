@@ -43,19 +43,28 @@ void ConnectionManager::removeSocket(QTcpSocket* socket)
     }
 }
 
+
 bool ConnectionManager::sendToUser(
     const QString& userId, const QByteArray& message)
 {
     QTcpSocket* socket = connections.value(userId, nullptr);
 
-    if (socket == nullptr ||
-        socket->state() != QAbstractSocket::ConnectedState)
+    if (socket == nullptr)
+        return false;
+
+    if (socket->state() != QAbstractSocket::ConnectedState)
+        return false;
+
+    if (message.isEmpty())
         return false;
 
     QByteArray data = message + '\n';
 
-    return socket->write(data) != -1;
+    qint64 bytesWritten = socket->write(data);
+
+    return bytesWritten == data.size();
 }
+
 
 QTcpSocket* ConnectionManager::getSocket(
     const QString& userId) const
