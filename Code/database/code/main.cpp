@@ -15,12 +15,10 @@ int main(int argc, char *argv[])
     QTextStream in(stdin);
     QTextStream out(stdout);
 
-    // =========================================
     // 1. KET NOI DATABASE
-    // =========================================
 
     Database database;
-
+  //    UserManager user(database);
     QString dbPassword = qEnvironmentVariable("CHAT_DB_PASSWORD");
 
     if (dbPassword.isEmpty())
@@ -58,18 +56,13 @@ int main(int argc, char *argv[])
 
     qDebug() << "Khoi tao database thanh cong!";
 
-    // =========================================
+    
     // 3. KHOI TAO CAC MANAGER
-    // =========================================
 
     UserManager users(database);
-
     ConversationManager conversations(database);
 
-    // =========================================
     // 4. MENU CHUONG TRINH
-    // =========================================
-
     QString choice;
 
     do
@@ -89,10 +82,7 @@ int main(int argc, char *argv[])
 
         choice = in.readLine().trimmed();
 
-        // =====================================
         // CHUC NANG 1: DANG KY TAI KHOAN
-        // =====================================
-
         if (choice == "1")
         {
             QString username;
