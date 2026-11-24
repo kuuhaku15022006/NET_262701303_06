@@ -319,3 +319,5 @@ bool UserManager::findUsers(
 
     return true;
 }
+
+/*test */

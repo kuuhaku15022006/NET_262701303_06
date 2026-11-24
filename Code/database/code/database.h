@@ -29,3 +29,5 @@ private:
     QString m_lastError;
     bool m_connected = false;
 };
+
+/*test */
