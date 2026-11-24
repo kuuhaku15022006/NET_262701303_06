@@ -18,6 +18,8 @@ public:
     void connectToServer(const QString &host, quint16 port);
     void disconnectFromServer();
     bool isConnected() const;
+    void reconnect();
+void setAutoReconnect(bool enabled, int intervalMs = 3000);
 
     int sendRequest(const QJsonObject &request);
 
@@ -49,9 +51,18 @@ private:
 
     QTcpSocket *m_socket = nullptr;
     QTimer *m_connectTimer = nullptr; // Đếm thời gian chờ kết nối (Checkpoint 4.5)
-    QTimer *m_requestTimer = nullptr; // Đếm thời gian chờ server phản hồi (Checkpoint 4.5)
-    QByteArray m_buffer;
-    int m_nextRequestId = 1;
+    QTimer *m_requestTimer = nullptr; // Đếm thời gian chờ server phản hồi
+ 
+
+
+QTimer *m_reconnectTimer = nullptr;
+bool m_autoReconnect = false;
+bool m_manualDisconnect = true;
+QString m_lastHost;
+quint16 m_lastPort = 0;
+
+QByteArray m_buffer;
+int m_nextRequestId = 1;
 };
 
 #endif
