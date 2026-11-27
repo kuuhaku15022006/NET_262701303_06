@@ -130,7 +130,7 @@ void TCPClient::reconnect()
 void TCPClient::setAutoReconnect(bool enabled, int intervalMs)
 {
     m_autoReconnect = enabled;
-    if (intervalMs > 0)a
+    if (intervalMs > 0)
         m_reconnectTimer->setInterval(intervalMs);
 
     if (!enabled)

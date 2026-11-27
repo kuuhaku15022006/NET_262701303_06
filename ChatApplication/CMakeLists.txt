@@ -80,11 +80,12 @@ target_link_libraries(ChatServer PRIVATE
 )
 
 if(WIN32)
+    add_custom_command(TARGET ChatApplication PRE_LINK
+        COMMAND cmd /c "taskkill /F /IM ChatApplication.exe >nul 2>&1 & exit /b 0"
+    )
     add_custom_command(TARGET ChatServer PRE_LINK
         COMMAND cmd /c "taskkill /F /IM ChatServer.exe >nul 2>&1 & exit /b 0"
     )
 endif()
-
-add_dependencies(ChatApplication ChatServer)
 
 add_dependencies(ChatApplication ChatServer)
