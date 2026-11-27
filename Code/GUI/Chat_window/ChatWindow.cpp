@@ -1,66 +1,62 @@
+
 #include "ChatWindow.h"
 
-int ChatWindow(int argc, char *argv[])
+#include <QLabel>
+#include <QTextEdit>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+
+ChatWindow::ChatWindow(QWidget *parent)
+    : QWidget(parent)
 {
-            QApplication app(argc, argv);
+    auto *mainLayout = new QVBoxLayout(this);
 
-            QWidget window;
-            window.setWindowTitle("Chat Application");
-            window.resize(1000, 650);
+    // Chat title
+    chatTitle = new QLabel("Chat");
+    chatTitle->setStyleSheet(
+        "font-size: 18px; font-weight: bold; padding: 10px;"
+    );
 
-            auto *mainLayout = new QHBoxLayout(&window);
+    // Message display
+    messageArea = new QTextEdit(this);
+    messageArea->setReadOnly(true);
+    messageArea->setPlaceholderText("Messages will appear here...");
 
-            // Left panel: contacts
-            auto *contactPanel = new QVBoxLayout();
+    // Message input
+    auto *inputLayout = new QHBoxLayout();
 
-            auto *contactTitle = new QLabel("Contacts");
-            auto *contactList = new QListWidget();
+    messageInput = new QLineEdit(this);
+    messageInput->setPlaceholderText("Type a message...");
 
-            contactList->addItem("🙂 Alice");
-            contactList->addItem("🧑 Bob");
-            contactList->addItem("👤 Charlie");
+    sendButton = new QPushButton("Send", this);
 
-            contactPanel->addWidget(contactTitle);
-            contactPanel->addWidget(contactList);
+    inputLayout->addWidget(messageInput);
+    inputLayout->addWidget(sendButton);
 
-            // Right panel: chat
-            auto *chatPanel = new QVBoxLayout();
+    // Main layout
+    mainLayout->addWidget(chatTitle);
+    mainLayout->addWidget(messageArea);
+    mainLayout->addLayout(inputLayout);
+}
 
-            auto *chatTitle = new QLabel("Chat with Alice");
-            auto *messageArea = new QTextEdit();
-            messageArea->setReadOnly(true);
+void ChatWindow::setChatTitle(const QString &title)
+{
+    chatTitle->setText(title);
+}
 
-            auto *inputLayout = new QHBoxLayout();
-            auto *messageInput = new QLineEdit();
-            auto *sendButton = new QPushButton("Send");
+QTextEdit* ChatWindow::getMessageArea() const
+{
+    return messageArea;
+}
 
-            messageInput->setPlaceholderText("Type a message...");
+QLineEdit* ChatWindow::getMessageInput() const
+{
+    return messageInput;
+}
 
-            inputLayout->addWidget(messageInput);
-            inputLayout->addWidget(sendButton);
-
-            chatPanel->addWidget(chatTitle);
-            chatPanel->addWidget(messageArea);
-            chatPanel->addLayout(inputLayout);
-
-            mainLayout->addLayout(contactPanel, 1);
-            mainLayout->addLayout(chatPanel, 3);
-
-            // Demonstration only: append message locally
-            QObject::connect(sendButton, &QPushButton::clicked,
-                            [&]() {
-                QString text = messageInput->text().trimmed();
-
-                if (!text.isEmpty()) {
-                    messageArea->append("You: " + text);
-                    messageInput->clear();
-                }
-            });
-
-            QObject::connect(messageInput, &QLineEdit::returnPressed,
-                            sendButton, &QPushButton::click);
-
-            window.show();
-
-            return app.exec();
+QPushButton* ChatWindow::getSendButton() const
+{
+    return sendButton;
 }

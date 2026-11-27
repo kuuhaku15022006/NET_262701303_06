@@ -1,9 +1,30 @@
-#include <QApplication>
+
+#ifndef CHATWINDOW_H
+#define CHATWINDOW_H
+
 #include <QWidget>
-#include <QLabel>
-#include <QPushButton>
-#include <QLineEdit>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QListWidget>
-#include <QTextEdit>
+
+class QLabel;
+class QTextEdit;
+class QLineEdit;
+class QPushButton;
+
+class ChatWindow : public QWidget
+{
+public:
+    explicit ChatWindow(QWidget *parent = nullptr);
+
+    void setChatTitle(const QString &title);
+
+    QTextEdit* getMessageArea() const;
+    QLineEdit* getMessageInput() const;
+    QPushButton* getSendButton() const;
+
+private:
+    QLabel *chatTitle;
+    QTextEdit *messageArea;
+    QLineEdit *messageInput;
+    QPushButton *sendButton;
+};
+
+#endif
