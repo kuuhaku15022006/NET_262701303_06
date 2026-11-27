@@ -12,6 +12,10 @@
 #include <thread>
 
 #include "ChatServer.h"
+#include "../database/code/database.h"
+#include "../database/code/user_manager.h"
+#include "../database/code/conversation_manager.h"
+#include "../chatServer/MessageManager.h"
 
 int main(int argc, char* argv[])
 {
@@ -19,6 +23,22 @@ int main(int argc, char* argv[])
 
     QTextStream input(stdin);
     QTextStream output(stdout);
+
+    // Khởi tạo Database theo code của NV2
+    Database database;
+    QString dbPassword = qEnvironmentVariable("CHAT_DB_PASSWORD");
+    if (dbPassword.isEmpty())
+        dbPassword = QStringLiteral("ChatTcp_2026_New!");
+
+    if (database.connectToMySQL("127.0.0.1", 3306, "chat_tcp", "chat_app", dbPassword)) {
+        database.initializeTables();
+    } else {
+        qWarning() << "Ket noi MySQL that bai:" << database.lastError();
+    }
+
+    UserManager users(database);
+    ConversationManager conversations(database);
+    MessageManager messages(database.sqlDatabase());
 
     QHostAddress host;
     int port = 0;
@@ -30,6 +50,8 @@ int main(int argc, char* argv[])
         output << "Enter host (ex: 127.0.0.1): ";
         output.flush();
         hostInput = input.readLine().trimmed();
+        if (hostInput.isEmpty())
+            hostInput = QStringLiteral("127.0.0.1");
 
         if (!host.setAddress(hostInput)) {
             qCritical() << "Invalid host address! Try again.";
@@ -39,6 +61,8 @@ int main(int argc, char* argv[])
         output << "Enter port (1->65535): ";
         output.flush();
         portInput = input.readLine().trimmed();
+        if (portInput.isEmpty())
+            portInput = QStringLiteral("5555");
 
         bool portOk = false;
         int inputPort = portInput.toInt(&portOk);
@@ -53,6 +77,7 @@ int main(int argc, char* argv[])
     }
 
     ChatServer server;
+    server.setManagers(&users, &conversations, &messages);
 
     QObject::connect(&server, &ChatServer::serverStarted,
         [](quint16 port) {
@@ -69,17 +94,8 @@ int main(int argc, char* argv[])
     QObject::connect(&server, &ChatServer::clientConnected,
         [&server, &clientNumber](QTcpSocket* socket) {
             clientNumber++;
-
-            QString userId = QString("test%1").arg(clientNumber);
-
-            if (server.registerUser(userId, socket)) {
-                qDebug() << "Registered:" << userId;
-
-                QByteArray response =
-                    R"({"type":"response","message":"Connected successfully"})";
-
-                server.sendToUser(userId, response);
-            }
+            qDebug() << "Client connected #" << clientNumber
+                     << "from" << socket->peerAddress().toString();
         });
 
     QObject::connect(&server, &ChatServer::clientDisconnected,

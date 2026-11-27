@@ -18,6 +18,9 @@ public:
     // Lay danh sach thanh vien theo Conversation ID
     QVariantList getMembersByConversationId(int conversationId);
 
+    // Khoi tao hoi thoai mac dinh cho user de test chat va forward
+    void ensureDefaultConversationsForUser(int userId);
+
 private:
     Database &database;
 };

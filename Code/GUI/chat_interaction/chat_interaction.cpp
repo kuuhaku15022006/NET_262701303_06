@@ -16,8 +16,88 @@
 #include <QVBoxLayout>
 #include <QDateTime>
 #include <QColor>
+#include <QCoreApplication>
+#include <QDir>
+#include <QFileInfo>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QUuid>
 
 namespace {
+QString findLocalChatDbPath()
+{
+    const QString appDir = QCoreApplication::applicationDirPath();
+    const QStringList candidates = {
+        QDir::currentPath() + QStringLiteral("/chat.db"),
+        appDir + QStringLiteral("/chat.db"),
+        appDir + QStringLiteral("/../chat.db"),
+        appDir + QStringLiteral("/../../chat.db"),
+        QStringLiteral("d:/NET_262701303_06/chat.db"),
+        QStringLiteral("d:/NET_262701303_06/build/chat.db")
+    };
+    for (const QString &p : candidates) {
+        if (QFileInfo::exists(p))
+            return p;
+    }
+    return QString();
+}
+
+QString lookupUsernameInDb(const QString &senderId)
+{
+    if (senderId.isEmpty())
+        return QString();
+    const QString dbPath = findLocalChatDbPath();
+    if (dbPath.isEmpty())
+        return QString();
+
+    QString result;
+    const QString connName = QStringLiteral("lookup_user_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(dbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare(QStringLiteral("SELECT display_name, username FROM users WHERE id = ?"));
+            q.addBindValue(senderId);
+            if (q.exec() && q.next()) {
+                result = q.value(0).toString().trimmed();
+                if (result.isEmpty())
+                    result = q.value(1).toString().trimmed();
+            }
+            db.close();
+        }
+    }
+    QSqlDatabase::removeDatabase(connName);
+    return result;
+}
+
+QString lookupMessageContentInDb(const QString &msgId)
+{
+    if (msgId.isEmpty())
+        return QString();
+    const QString dbPath = findLocalChatDbPath();
+    if (dbPath.isEmpty())
+        return QString();
+
+    QString result;
+    const QString connName = QStringLiteral("lookup_msg_%1").arg(QUuid::createUuid().toString(QUuid::WithoutBraces));
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
+        db.setDatabaseName(dbPath);
+        if (db.open()) {
+            QSqlQuery q(db);
+            q.prepare(QStringLiteral("SELECT content FROM messages WHERE id = ?"));
+            q.addBindValue(msgId);
+            if (q.exec() && q.next()) {
+                result = q.value(0).toString();
+            }
+            db.close();
+        }
+    }
+    QSqlDatabase::removeDatabase(connName);
+    return result;
+}
+
 QString valueAsString(const QJsonObject &obj, const QStringList &keys)
 {
     for (const QString &key : keys) {
@@ -81,6 +161,7 @@ void ChatInteraction::setupUi()
     auto *right = new QVBoxLayout;
 
     auto *conversationLabel = new QLabel("Conversations");
+    m_conversationLabel = conversationLabel;
     m_conversations = new QListWidget;
     m_conversations->setMinimumWidth(200);
     left->addWidget(conversationLabel);
@@ -158,6 +239,42 @@ void ChatInteraction::clearConversations()
     m_conversationId.clear();
     m_title->setText("Select a conversation");
     cancelReply();
+}
+
+void ChatInteraction::setConversationListVisible(bool visible)
+{
+    if (m_conversationLabel)
+        m_conversationLabel->setVisible(visible);
+    if (m_conversations)
+        m_conversations->setVisible(visible);
+}
+
+void ChatInteraction::selectConversationById(const QString &conversationId,
+                                             const QString &displayName)
+{
+    if (conversationId.trimmed().isEmpty())
+        return;
+
+    if (!displayName.isEmpty()) {
+        addConversation(conversationId, displayName);
+    }
+
+    for (int i = 0; i < m_conversations->count(); ++i) {
+        QListWidgetItem *item = m_conversations->item(i);
+        if (item->data(Qt::UserRole).toString() == conversationId) {
+            m_conversations->setCurrentItem(item);
+            selectConversation(item);
+            return;
+        }
+    }
+
+    m_conversationId = conversationId;
+    if (!displayName.isEmpty())
+        m_title->setText(displayName);
+    m_messages->clear();
+    m_renderedIds.clear();
+    cancelReply();
+    requestHistory();
 }
 
 void ChatInteraction::selectConversation(QListWidgetItem *item)
@@ -260,16 +377,38 @@ void ChatInteraction::appendMessage(const QJsonObject &message)
     if (!convId.isEmpty() && convId != m_conversationId) return;
 
     const QString sender = valueAsString(message, {"sender_id", "senderId"});
+    QString senderName = lookupUsernameInDb(sender);
+    if (senderName.isEmpty())
+        senderName = valueAsString(message, {"display_name", "sender_name", "username"});
+    if (senderName.isEmpty())
+        senderName = sender;
+
     const QString content = valueAsString(message, {"content", "message"});
     const QString replyTo = valueAsString(message, {"reply_to", "replyTo"});
+    QString replyText = valueAsString(message, {"reply_preview"});
     const QString forwarded = valueAsString(message, {"forwarded_from", "forwardedFrom"});
     const QString timestamp = valueAsString(message, {"timestamp", "created_at"});
     const bool mine = !m_userId.isEmpty() && sender == m_userId;
 
+    if (!replyTo.isEmpty() && replyText.isEmpty()) {
+        for (int i = 0; i < m_messages->count(); ++i) {
+            QListWidgetItem *existing = m_messages->item(i);
+            if (existing && existing->data(Qt::UserRole).toString() == replyTo) {
+                const QJsonObject origObj = existing->data(Qt::UserRole + 1).toJsonObject();
+                replyText = valueAsString(origObj, {"content", "message"});
+                break;
+            }
+        }
+        if (replyText.isEmpty())
+            replyText = lookupMessageContentInDb(replyTo);
+    }
+
     QString display;
     if (!forwarded.isEmpty()) display += "↪ Forwarded\n";
-    if (!replyTo.isEmpty()) display += "↳ Reply to: " + replyTo + "\n";
-    display += mine ? "You: " : sender + ": ";
+    if (!replyTo.isEmpty()) {
+        display += "↳ Reply to: " + (replyText.isEmpty() ? replyTo : QStringLiteral("\"") + replyText + QStringLiteral("\"")) + "\n";
+    }
+    display += mine ? "You: " : senderName + ": ";
     display += content;
     if (!timestamp.isEmpty()) {
         const QDateTime dt = QDateTime::fromString(timestamp, Qt::ISODate);

@@ -26,6 +26,9 @@ public:
     void addConversation(const QString &conversationId,
                          const QString &displayName);
     void clearConversations();
+    void setConversationListVisible(bool visible);
+    void selectConversationById(const QString &conversationId,
+                                const QString &displayName = QString());
 
 private slots:
     void selectConversation(QListWidgetItem *item);
@@ -55,6 +58,7 @@ private:
     QSet<QString> m_renderedIds;
 
     QListWidget *m_conversations = nullptr;
+    QLabel *m_conversationLabel = nullptr;
     QListWidget *m_messages = nullptr;
     QLabel *m_title = nullptr;
     QLabel *m_status = nullptr;

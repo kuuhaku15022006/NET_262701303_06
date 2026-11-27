@@ -89,4 +89,53 @@ QVariantList ConversationManager::getMembersByConversationId(
     return result;
 }
 
+void ConversationManager::ensureDefaultConversationsForUser(int userId)
+{
+    if (userId <= 0)
+        return;
+
+    // Đảm bảo có ít nhất 2 phòng chat chung để user có thể nhắn tin và forward sang hội thoại khác
+    const QStringList defaultRooms = {
+        QStringLiteral("Phòng Chat Chung"),
+        QStringLiteral("Nhóm Học Tập")
+    };
+
+    for (const QString &roomName : defaultRooms) {
+        QSqlQuery checkRoom = database.query(
+            QStringLiteral("SELECT id FROM conversations WHERE name = ?"),
+            {roomName}
+        );
+
+        int convId = 0;
+        if (checkRoom.isActive() && checkRoom.next()) {
+            convId = checkRoom.value(0).toInt();
+        } else {
+            database.execute(
+                QStringLiteral("INSERT INTO conversations (name) VALUES (?)"),
+                {roomName}
+            );
+            QSqlQuery recheck = database.query(
+                QStringLiteral("SELECT id FROM conversations WHERE name = ?"),
+                {roomName}
+            );
+            if (recheck.isActive() && recheck.next()) {
+                convId = recheck.value(0).toInt();
+            }
+        }
+
+        if (convId > 0) {
+            QSqlQuery checkMember = database.query(
+                QStringLiteral("SELECT 1 FROM conversation_members WHERE conversation_id = ? AND user_id = ?"),
+                {convId, userId}
+            );
+            if (checkMember.isActive() && !checkMember.next()) {
+                database.execute(
+                    QStringLiteral("INSERT INTO conversation_members (conversation_id, user_id) VALUES (?, ?)"),
+                    {convId, userId}
+                );
+            }
+        }
+    }
+}
+
 /*test */

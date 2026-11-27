@@ -16,7 +16,6 @@ set(CODE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../Code")
 qt_add_executable(ChatApplication
     ${CODE_DIR}/GUI/Chat_window/ChatWindow.cpp
     ${CODE_DIR}/GUI/Chat_window/ChatWindow.h
-    ${CODE_DIR}/GUI/Chat_window/ChatWindow.ui
     ${CODE_DIR}/GUI/Login_window/main.cpp
     ${CODE_DIR}/GUI/Login_window/loginwindow.cpp
     ${CODE_DIR}/GUI/Login_window/loginwindow.h
@@ -52,3 +51,40 @@ target_link_libraries(ChatApplication PRIVATE
     Qt6::Network
     Qt6::Sql
 )
+
+qt_add_executable(ChatServer
+    ${CODE_DIR}/server/main.cpp
+    ${CODE_DIR}/server/ChatServer.cpp
+    ${CODE_DIR}/server/ChatServer.h
+    ${CODE_DIR}/server/ClientHandler.cpp
+    ${CODE_DIR}/server/ClientHandler.h
+    ${CODE_DIR}/server/ConnectionManager.cpp
+    ${CODE_DIR}/server/ConnectionManager.h
+    ${CODE_DIR}/database/code/database.cpp
+    ${CODE_DIR}/database/code/database.h
+    ${CODE_DIR}/database/code/user_manager.cpp
+    ${CODE_DIR}/database/code/user_manager.h
+    ${CODE_DIR}/database/code/conversation_manager.cpp
+    ${CODE_DIR}/database/code/conversation_manager.h
+    ${CODE_DIR}/chatServer/MessageManage.cpp
+    ${CODE_DIR}/chatServer/MessageManager.h
+    ${CODE_DIR}/shared/Protocol.cpp
+    ${CODE_DIR}/shared/Protocol.h
+    ${CODE_DIR}/shared/Message.h
+)
+
+target_link_libraries(ChatServer PRIVATE
+    Qt6::Core
+    Qt6::Network
+    Qt6::Sql
+)
+
+if(WIN32)
+    add_custom_command(TARGET ChatServer PRE_LINK
+        COMMAND cmd /c "taskkill /F /IM ChatServer.exe >nul 2>&1 & exit /b 0"
+    )
+endif()
+
+add_dependencies(ChatApplication ChatServer)
+
+add_dependencies(ChatApplication ChatServer)

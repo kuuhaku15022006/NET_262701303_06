@@ -56,9 +56,56 @@ bool Database::connectToMySQL(const QString &host,
     m_db.setPassword(password);
 
     if (!m_db.open()) {
-        m_lastError = m_db.lastError().text();
-        m_connected = false;
-        return false;
+        // Thử các phiên bản MySQL ODBC Driver phổ biến và tài khoản root mặc định của XAMPP
+        const QStringList drivers = {
+            QStringLiteral("MySQL ODBC 26.10 Unicode Driver"),
+            QStringLiteral("MySQL ODBC 9.2 Unicode Driver"),
+            QStringLiteral("MySQL ODBC 9.1 Unicode Driver"),
+            QStringLiteral("MySQL ODBC 9.0 Unicode Driver"),
+            QStringLiteral("MySQL ODBC 8.4 Unicode Driver"),
+            QStringLiteral("MySQL ODBC 8.0 Unicode Driver"),
+            QStringLiteral("MySQL ODBC 5.3 Unicode Driver")
+        };
+        const QList<QPair<QString, QString>> creds = {
+            {username, password},
+            {QStringLiteral("root"), QString()},
+            {QStringLiteral("root"), password}
+        };
+
+        bool opened = false;
+        for (const QString &drv : drivers) {
+            for (const auto &cred : creds) {
+                const QString connNoDb = QStringLiteral("DRIVER={%1};SERVER=%2;PORT=%3;")
+                                             .arg(drv).arg(host).arg(port);
+                m_db.setDatabaseName(connNoDb);
+                m_db.setUserName(cred.first);
+                m_db.setPassword(cred.second);
+                if (m_db.open()) {
+                    QSqlQuery initDb(m_db);
+                    initDb.exec(QStringLiteral("CREATE DATABASE IF NOT EXISTS %1 CHARACTER SET utf8mb4").arg(databaseName));
+                    initDb.exec(QStringLiteral("USE %1").arg(databaseName));
+                    opened = true;
+                    break;
+                }
+            }
+            if (opened)
+                break;
+        }
+
+        // Nếu máy chưa cài MySQL ODBC Driver thì dùng QSQLITE (chat.db) để ứng dụng vẫn chạy được ngay
+        if (!opened) {
+            m_db = QSqlDatabase();
+            QSqlDatabase::removeDatabase(m_connectionName);
+            m_db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), m_connectionName);
+            m_db.setDatabaseName(QStringLiteral("chat.db"));
+            opened = m_db.open();
+        }
+
+        if (!opened) {
+            m_lastError = m_db.lastError().text();
+            m_connected = false;
+            return false;
+        }
     }
 
     m_connected = true;
@@ -90,6 +137,14 @@ bool Database::initializeTables()
         m_lastError =
             QStringLiteral("Database chưa được kết nối.");
         return false;
+    }
+
+    if (m_db.driverName() == QStringLiteral("QSQLITE")) {
+        execute(QStringLiteral("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL, password_salt TEXT NOT NULL, display_name TEXT NOT NULL, avatar TEXT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"));
+        execute(QStringLiteral("CREATE TABLE IF NOT EXISTS conversations (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"));
+        execute(QStringLiteral("CREATE TABLE IF NOT EXISTS conversation_members (conversation_id INTEGER NOT NULL, user_id INTEGER NOT NULL, joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY (conversation_id, user_id))"));
+        execute(QStringLiteral("CREATE TABLE IF NOT EXISTS messages (id TEXT NOT NULL PRIMARY KEY, conversation_id INTEGER NOT NULL, sender_id INTEGER NOT NULL, content TEXT NOT NULL, timestamp TEXT NULL, reply_to TEXT NULL, forwarded_from TEXT NULL, sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"));
+        return true;
     }
 
     const QStringList statements = {
@@ -141,10 +196,13 @@ bool Database::initializeTables()
 
         QStringLiteral(
             "CREATE TABLE IF NOT EXISTS messages ("
-            "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+            "id VARCHAR(64) NOT NULL PRIMARY KEY,"
             "conversation_id BIGINT UNSIGNED NOT NULL,"
             "sender_id INT NOT NULL,"
             "content TEXT NOT NULL,"
+            "timestamp VARCHAR(64) NULL,"
+            "reply_to VARCHAR(64) NULL,"
+            "forwarded_from VARCHAR(64) NULL,"
             "sent_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
 
             "CONSTRAINT fk_msg_conversation "
@@ -168,6 +226,13 @@ bool Database::initializeTables()
             return false;
         }
     }
+
+    // Đảm bảo bảng messages cũ trong MySQL (nếu đã tạo trước đó) có đủ cột cho MessageManager (NV3)
+    execute(QStringLiteral("ALTER TABLE messages MODIFY COLUMN id VARCHAR(64) NOT NULL"));
+    execute(QStringLiteral("ALTER TABLE messages ADD COLUMN timestamp VARCHAR(64) NULL"));
+    execute(QStringLiteral("ALTER TABLE messages ADD COLUMN reply_to VARCHAR(64) NULL"));
+    execute(QStringLiteral("ALTER TABLE messages ADD COLUMN forwarded_from VARCHAR(64) NULL"));
+    m_lastError.clear();
 
     return true;
 }

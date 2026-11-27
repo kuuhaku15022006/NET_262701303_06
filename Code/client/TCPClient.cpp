@@ -29,7 +29,7 @@ TCPClient::TCPClient(QObject *parent)
     m_requestTimer->setSingleShot(true);
     m_requestTimer->setInterval(5000);
     connect(m_requestTimer, &QTimer::timeout, this, [this]() {
-        emit connectionError(QStringLiteral("Server không phản hồi (request timeout)"));
+        emit connectionError(QStringLiteral("Server khong phan hoi (request timeout)"));
     });
 
     // Hết thời gian chờ thì tự động gọi reconnect (Checkpoint 4.6)
@@ -130,7 +130,7 @@ void TCPClient::reconnect()
 void TCPClient::setAutoReconnect(bool enabled, int intervalMs)
 {
     m_autoReconnect = enabled;
-    if (intervalMs > 0)
+    if (intervalMs > 0)a
         m_reconnectTimer->setInterval(intervalMs);
 
     if (!enabled)

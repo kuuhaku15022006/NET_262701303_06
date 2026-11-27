@@ -1,5 +1,8 @@
 #include "mainwindow.h"
+#include "../chat_interaction/chat_interaction.h"
+#include "../../client/TCPClient.h"
 #include <QHBoxLayout>
+#include <QJsonArray>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
@@ -8,9 +11,23 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent)
+    : MainWindow(nullptr, QString(), QString(), parent)
 {
-    setWindowTitle("Chat TCP");
+}
+
+MainWindow::MainWindow(TCPClient *client,
+                       const QString &userId,
+                       const QString &username,
+                       QWidget *parent)
+    : QMainWindow(parent)
+    , m_client(client)
+    , m_userId(userId)
+    , m_username(username)
+{
+    setWindowTitle(m_username.isEmpty()
+                   ? QStringLiteral("Chat TCP")
+                   : QStringLiteral("Chat TCP - ") + m_username);
     resize(900, 600);
     auto *central = new QWidget(this);
     setCentralWidget(central);
@@ -29,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     auto *right = new QVBoxLayout;
     right->addWidget(new QLabel("Avatar"));
-    right->addWidget(new QLabel("Sample User"));
+    right->addWidget(new QLabel(m_username.isEmpty() ? QStringLiteral("Sample User") : QStringLiteral("User: ") + m_username));
     auto *messages = new QTextEdit;
     messages->setReadOnly(true);
     messages->setPlaceholderText("Message history will appear here.");
@@ -42,6 +59,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     input->addWidget(messageInput);
     input->addWidget(sendButton);
     right->addLayout(input);
+
+    if (m_client) {
+        messages->hide();
+        messageInput->hide();
+        sendButton->hide();
+
+        m_chatWidget = new ChatInteraction(m_client, m_userId, this);
+        m_chatWidget->setConversationListVisible(false);
+        right->addWidget(m_chatWidget, 1);
+
+        connect(m_client, &TCPClient::responseReceived,
+                this, &MainWindow::handleServerResponse);
+        if (m_client->isConnected()) {
+            m_client->getConversations();
+        }
+    }
 
     mainLayout->addLayout(left, 1);
     mainLayout->addLayout(right, 3);
@@ -59,6 +92,9 @@ void MainWindow::selectConversation(QListWidgetItem *item)
     const int id = item->data(Qt::UserRole).toInt();
     emit conversationSelected(id);
     // TODO: NV4 loads conversation history.
+    if (m_chatWidget) {
+        m_chatWidget->selectConversationById(item->data(Qt::UserRole).toString(), item->text());
+    }
 }
 
 void MainWindow::sendMessage()
@@ -67,4 +103,39 @@ void MainWindow::sendMessage()
         return;
     // TODO: NV6 sends the message through NV4 TCP Client.
     messageInput->clear();
+}
+
+void MainWindow::handleServerResponse(const QJsonObject &response)
+{
+    if (response.value(QStringLiteral("request_type")).toString() != QStringLiteral("get_conversations")
+        || !response.value(QStringLiteral("ok")).toBool())
+        return;
+
+    const QJsonArray arr = response.value(QStringLiteral("payload")).toObject()
+                               .value(QStringLiteral("conversations")).toArray();
+    if (arr.isEmpty())
+        return;
+
+    conversationList->clear();
+    if (m_chatWidget)
+        m_chatWidget->clearConversations();
+
+    for (const QJsonValue &val : arr) {
+        const QJsonObject cObj = val.toObject();
+        const int id = cObj.value(QStringLiteral("id")).toInt();
+        const QString idStr = QString::number(id);
+        const QString name = cObj.value(QStringLiteral("name")).toString();
+
+        auto *item = new QListWidgetItem(name);
+        item->setData(Qt::UserRole, id);
+        conversationList->addItem(item);
+
+        if (m_chatWidget)
+            m_chatWidget->addConversation(idStr, name);
+    }
+
+    if (conversationList->count() > 0) {
+        conversationList->setCurrentRow(0);
+        selectConversation(conversationList->item(0));
+    }
 }

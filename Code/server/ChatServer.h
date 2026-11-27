@@ -13,6 +13,10 @@
 #include <QDebug>
 #include "ClientHandler.h"
 
+class UserManager;
+class ConversationManager;
+class MessageManager;
+
 class ChatServer : public QObject
 {
     Q_OBJECT
@@ -22,6 +26,10 @@ public:
     explicit ChatServer(QObject* parent = nullptr);
 
     ~ChatServer();
+
+    void setManagers(UserManager* userMgr,
+                     ConversationManager* convMgr,
+                     MessageManager* msgMgr);
 
     QString errorString() const;
 
@@ -58,11 +66,18 @@ private slots:
     void handleNewConnection();
 
 private:
+    void routeRequest(QTcpSocket* socket, const QJsonObject& request);
+    void sendJsonToSocket(QTcpSocket* socket, const QJsonObject& obj);
+
     QTcpServer* server;
 
     QList<ClientHandler*> clients;
 
     ConnectionManager* connectionManager;
+
+    UserManager* userManager = nullptr;
+    ConversationManager* conversationManager = nullptr;
+    MessageManager* messageManager = nullptr;
 };
 
 #endif // CHATSERVER_H

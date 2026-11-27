@@ -17,6 +17,8 @@ public:
 
     void connectToServer(const QString &host, quint16 port);
     void disconnectFromServer();
+    void reconnect(); // Gọi nối lại tới server cũ (Checkpoint 4.6)
+    void setAutoReconnect(bool enabled, int intervalMs = 3000); // Bật/tắt tự nối lại (Checkpoint 4.6)
     bool isConnected() const;
 
     int sendRequest(const QJsonObject &request);
@@ -48,10 +50,15 @@ private:
     void processLine(const QByteArray &line);
 
     QTcpSocket *m_socket = nullptr;
-    QTimer *m_connectTimer = nullptr; // Đếm thời gian chờ kết nối (Checkpoint 4.5)
-    QTimer *m_requestTimer = nullptr; // Đếm thời gian chờ server phản hồi (Checkpoint 4.5)
+    QTimer *m_connectTimer = nullptr;   // Đếm thời gian chờ kết nối (Checkpoint 4.5)
+    QTimer *m_requestTimer = nullptr;   // Đếm thời gian chờ server phản hồi (Checkpoint 4.5)
+    QTimer *m_reconnectTimer = nullptr; // Hẹn giờ tự nối lại khi rớt mạng (Checkpoint 4.6)
     QByteArray m_buffer;
+    QString m_lastHost;                 // Lưu lại host cũ để reconnect (Checkpoint 4.6)
+    quint16 m_lastPort = 0;             // Lưu lại port cũ để reconnect (Checkpoint 4.6)
+    bool m_autoReconnect = false;       // Cờ bật/tắt tự động reconnect
+    bool m_manualDisconnect = false;    // Phân biệt mình tự ngắt hay do server tắt
     int m_nextRequestId = 1;
 };
 
-#endif
+#endif 

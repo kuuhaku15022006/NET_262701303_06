@@ -26,6 +26,8 @@ public:
 
     QTcpSocket* getSocket(const QString& userId) const;
 
+    QString getUserId(QTcpSocket* socket) const;
+
     int connectionCount() const;
 
 private:

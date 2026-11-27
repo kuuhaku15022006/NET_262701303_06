@@ -22,6 +22,7 @@ public:
     bool execute(const QString &sql, const QVariantList &params = {});
     QSqlQuery query(const QString &sql, const QVariantList &params = {});
     QString lastError() const;
+    QSqlDatabase sqlDatabase() const { return m_db; }
 
 private:
     QSqlDatabase m_db;

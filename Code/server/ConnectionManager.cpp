@@ -15,8 +15,7 @@ bool ConnectionManager::addConnection(
     if (socket->state() != QAbstractSocket::ConnectedState)
         return false;
 
-    if (connections.contains(userId))
-        return false;
+    removeSocket(socket);
 
     connections.insert(userId, socket);
 
@@ -70,6 +69,15 @@ QTcpSocket* ConnectionManager::getSocket(
     const QString& userId) const
 {
     return connections.value(userId, nullptr);
+}
+
+QString ConnectionManager::getUserId(QTcpSocket* socket) const
+{
+    for (auto it = connections.constBegin(); it != connections.constEnd(); ++it) {
+        if (it.value() == socket)
+            return it.key();
+    }
+    return QString();
 }
 
 int ConnectionManager::connectionCount() const
